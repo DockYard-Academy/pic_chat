@@ -24,6 +24,16 @@ defmodule PicChatWeb.MessageLive.FormComponent do
   end
 
   def handle_event("save", %{"message" => message_params}, socket) do
+    uploaded_files =
+      consume_uploaded_entries(socket, :picture, fn %{path: path}, _entry ->
+        file_name = Path.basename(path)
+        File.cp!(path, "priv/static/images/#{file_name}")
+
+        {:ok, Routes.static_path(socket, "/images/#{file_name}")}
+      end)
+
+    message_params = Map.put(message_params, "picture", List.first(uploaded_files))
+
     save_message(socket, socket.assigns.action, message_params)
   end
 

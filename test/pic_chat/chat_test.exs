@@ -21,11 +21,12 @@ defmodule PicChat.ChatTest do
     end
 
     test "create_message/1 with valid data creates a message" do
-      valid_attrs = %{content: "some content", from: "some from"}
+      valid_attrs = %{content: "some content", from: "some from", picture: "images/picture_url"}
 
       assert {:ok, %Message{} = message} = Chat.create_message(valid_attrs)
       assert message.content == "some content"
       assert message.from == "some from"
+      assert message.picture == "images/picture_url"
     end
 
     test "create_message/1 with invalid data returns error changeset" do

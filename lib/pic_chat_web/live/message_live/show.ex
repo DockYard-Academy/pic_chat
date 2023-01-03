@@ -5,7 +5,7 @@ defmodule PicChatWeb.MessageLive.Show do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok, allow_upload(socket, :picture, accept: ~w(.jpg .jpeg .png), max_entries: 1)}
   end
 
   @impl true

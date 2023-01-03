@@ -1,11 +1,12 @@
 <h1>Listing Messages</h1>
-
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.message_index_path(@socket, :index)}>
     <.live_component
       module={PicChatWeb.MessageLive.FormComponent}
       id={@message.id || :new}
       title={@page_title}
+      # provide uploads to the form component
+      uploads={@uploads}
       action={@live_action}
       message={@message}
       return_to={Routes.message_index_path(@socket, :index)}
@@ -18,6 +19,7 @@
     <tr>
       <th>Content</th>
       <th>From</th>
+      <th>Picture</th>
 
       <th></th>
     </tr>
@@ -27,6 +29,7 @@
       <tr id={"message-#{message.id}"}>
         <td><%= message.content %></td>
         <td><%= message.from %></td>
+        <td><img alt={message.picture} src={message.picture} /></td>
 
         <td>
           <span><%= live_redirect "Show", to: Routes.message_show_path(@socket, :show, message) %></span>
