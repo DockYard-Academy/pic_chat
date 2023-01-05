@@ -17,7 +17,14 @@
     <%= error_tag f, :from %>
 
     <%= if assigns[:uploads] do %>
-      <%= live_file_input @uploads.picture %>
+        <label id="drag-n-drop"  class="drag-n-drop" phx-drop-target={@uploads.picture.ref}>
+              Click or drag and drop to upload image
+              <%= live_file_input @uploads.picture, style: "display: none;" %>
+        </label>
+        <%= for entry <- @uploads.picture.entries do %>
+          <p><%= entry.client_name %></p>
+          <%= live_img_preview entry, width: 100 %>
+        <% end %>
     <% end %>
 
     <div>
