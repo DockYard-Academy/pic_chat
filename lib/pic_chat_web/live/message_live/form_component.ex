@@ -39,7 +39,9 @@ defmodule PicChatWeb.MessageLive.FormComponent do
 
   defp save_message(socket, :edit, message_params) do
     case Chat.update_message(socket.assigns.message, message_params) do
-      {:ok, _message} ->
+      {:ok, message} ->
+        PicChatWeb.Endpoint.broadcast("messages", "update_message", message)
+
         {:noreply,
          socket
          |> put_flash(:info, "Message updated successfully")
@@ -52,7 +54,9 @@ defmodule PicChatWeb.MessageLive.FormComponent do
 
   defp save_message(socket, :new, message_params) do
     case Chat.create_message(message_params) do
-      {:ok, _message} ->
+      {:ok, message} ->
+        PicChatWeb.Endpoint.broadcast("messages", "create_message", message)
+
         {:noreply,
          socket
          |> put_flash(:info, "Message created successfully")

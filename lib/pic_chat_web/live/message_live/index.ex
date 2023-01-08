@@ -6,6 +6,8 @@ defmodule PicChatWeb.MessageLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    PicChatWeb.Endpoint.subscribe("messages")
+
     {:ok,
      socket
      |> assign(:messages, list_messages())
@@ -36,9 +38,16 @@ defmodule PicChatWeb.MessageLive.Index do
   end
 
   @impl true
+  def handle_info(%{topic: "messages", event: _, payload: _}, socket) do
+    {:noreply, assign(socket, :messages, list_messages())}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     message = Chat.get_message!(id)
     {:ok, _} = Chat.delete_message(message)
+
+    PicChatWeb.Endpoint.broadcast("messages", "delete_message", id)
 
     {:noreply, assign(socket, :messages, list_messages())}
   end
