@@ -6,7 +6,9 @@ defmodule PicChatWeb.MessageLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    PicChatWeb.Endpoint.subscribe("messages")
+    if connected?(socket) do
+      PicChatWeb.Endpoint.subscribe("messages")
+    end
 
     {:ok,
      socket
