@@ -51,7 +51,7 @@ defmodule PicChatWeb.MessageLive.Index do
 
     PicChatWeb.Endpoint.broadcast("messages", "delete_message", id)
 
-    {:noreply, assign(socket, :messages, list_messages())}
+    {:noreply, socket}
   end
 
   defp list_messages do
