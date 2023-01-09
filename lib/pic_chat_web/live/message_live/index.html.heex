@@ -14,31 +14,38 @@
   </.modal>
 <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Content</th>
-      <th>From</th>
-      <th>Picture</th>
+<div
+  id="infinite-scroll"
+  phx-hook="InfiniteScroll"
+  data-page={@page}
+  style="height: 300px; overflow: auto;"
+>
+  <table>
+    <thead>
+      <tr>
+        <th>Content</th>
+        <th>From</th>
+        <th>Picture</th>
 
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="messages">
-    <%= for message <- @messages do %>
-      <tr id={"message-#{message.id}"}>
-        <td><%= message.content %></td>
-        <td><%= message.from %></td>
-        <td><img alt={message.picture} src={message.picture} /></td>
-
-        <td>
-          <span><%= live_redirect "Show", to: Routes.message_show_path(@socket, :show, message) %></span>
-          <span><%= live_patch "Edit", to: Routes.message_index_path(@socket, :edit, message) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: message.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody id="messages">
+      <%= for message <- @messages do %>
+        <tr id={"message-#{message.id}"}>
+          <td><%= message.content %></td>
+          <td><%= message.from %></td>
+          <td><img alt={message.picture} src={message.picture} /></td>
+
+          <td>
+            <span><%= live_redirect "Show", to: Routes.message_show_path(@socket, :show, message) %></span>
+            <span><%= live_patch "Edit", to: Routes.message_index_path(@socket, :edit, message) %></span>
+            <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: message.id, data: [confirm: "Are you sure?"] %></span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 <span><%= live_patch "New Message", to: Routes.message_index_path(@socket, :new) %></span>

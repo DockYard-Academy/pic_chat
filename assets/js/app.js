@@ -27,10 +27,41 @@ import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, { params: { _csrf_token: csrfToken } })
+
+let Hooks = {
+    InfiniteScroll: {
+        page() { return parseInt(this.el.dataset.page) },
+        scrollAt() {
+            return this.el.scrollTop / (this.el.scrollHeight - this.el.clientHeight) * 100
+        },
+        mounted() {
+            this.pending = this.page()
+            this.el.addEventListener("scroll", e => {
+                // do not load more if there is already a pending page greater than the current page.
+                if (this.pending == this.page() && this.scrollAt() > 90) {
+                    this.pending = this.pending + 1
+                    this.pushEvent("load-more", {})
+                }
+            })
+
+            this.handleEvent("highlight", ({ id }) => {
+                new_message = document.getElementById(`message-${id}`)
+                new_message.classList.add("highlight")
+            })
+
+        },
+        updated() {
+            // reset the pending page when the messages have been loaded.
+            this.pending = this.page()
+        }
+    },
+}
+
+let liveSocket = new LiveSocket("/live", Socket, { params: { _csrf_token: csrfToken }, hooks: Hooks })
 
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })
+
 window.addEventListener("phx:page-loading-start", info => topbar.show())
 window.addEventListener("phx:page-loading-stop", info => topbar.hide())
 

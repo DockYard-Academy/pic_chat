@@ -9,3 +9,11 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+Enum.each(1..100, fn index ->
+  PicChat.Chat.create_message(%{
+    content: "Sample Content #{index}",
+    from: "Sample User #{index}",
+    picture: "images/phoenix.png"
+  })
+end)

@@ -6,6 +6,21 @@
  * Copyright (c) 2020 CJ Patoilo Licensed under the MIT license
  */
 
+.highlight {
+  border-radius: 3px;
+  animation: highlight 1000ms ease-out;
+}
+
+@keyframes highlight {
+  0% {
+    background-color: lightgrey;
+  }
+
+  100% {
+    background-color: white;
+  }
+}
+
 .drag-n-drop {
   background-color: lightgrey;
   width: 100%;

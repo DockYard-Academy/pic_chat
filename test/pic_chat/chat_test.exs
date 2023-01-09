@@ -15,6 +15,21 @@ defmodule PicChat.ChatTest do
       assert Chat.list_messages() == [message]
     end
 
+    test "list_messages/0 returns paginated messages" do
+      messages =
+        Enum.map(1..100, fn _ ->
+          message_fixture()
+        end)
+        |> Enum.reverse()
+
+      assert Chat.list_messages(per_page: 10, page: 1) == Enum.slice(messages, 0..9)
+      assert Chat.list_messages(per_page: 10, page: 2) == Enum.slice(messages, 10..19)
+      assert Chat.list_messages(per_page: 10, page: 5) == Enum.slice(messages, 40..49)
+      assert Chat.list_messages(per_page: 10, page: 9) == Enum.slice(messages, 80..89)
+      assert Chat.list_messages(per_page: 10, page: 10) == Enum.slice(messages, 90..99)
+      assert Chat.list_messages(per_page: 10, page: 11) == []
+    end
+
     test "get_message!/1 returns the message with given id" do
       message = message_fixture()
       assert Chat.get_message!(message.id) == message

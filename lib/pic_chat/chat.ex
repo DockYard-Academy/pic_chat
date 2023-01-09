@@ -21,6 +21,16 @@ defmodule PicChat.Chat do
     Repo.all(Message)
   end
 
+  def list_messages(opts) do
+    per_page = Keyword.fetch!(opts, :per_page)
+    page = Keyword.fetch!(opts, :page)
+
+    Message
+    |> order_by([message], desc: message.id, desc: message.inserted_at)
+    |> paginate(page, per_page)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single message.
 
@@ -100,5 +110,13 @@ defmodule PicChat.Chat do
   """
   def change_message(%Message{} = message, attrs \\ %{}) do
     Message.changeset(message, attrs)
+  end
+
+  defp paginate(query, page, per_page) do
+    offset_by = (page - 1) * per_page
+
+    query
+    |> limit(^per_page)
+    |> offset(^offset_by)
   end
 end
