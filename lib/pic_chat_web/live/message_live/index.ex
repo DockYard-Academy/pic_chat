@@ -70,8 +70,6 @@ defmodule PicChatWeb.MessageLive.Index do
 
   @impl true
   def handle_info(%{topic: "messages", event: "delete_message", payload: id}, socket) do
-    IO.inspect(id, label: "DELETING")
-
     {:noreply,
      socket
      |> assign(:messages, Enum.reject(socket.assigns.messages, &(&1.id == String.to_integer(id))))}
